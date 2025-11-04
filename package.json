@@ -1,0 +1,26 @@
+{
+  "name": "hyakyusha",
+  "version": "1.0.0",
+  "description": "Discord bot",
+  "main": "secrets.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CelesteInter/Hyakyusha.git"
+  },
+  "author": "katalyste",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CelesteInter/Hyakyusha/issues"
+  },
+  "homepage": "https://github.com/CelesteInter/Hyakyusha#readme",
+  "dependencies": {
+    "discord.js": "^14.24.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1"
+  }
+}
