@@ -20,11 +20,14 @@ client.once(Events.ClientReady, (readyClient) => {
 	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 });
 
+// Registering slash commands
 client.commands = new Collection();
 
+// Grab all the command folders from the commands directory you created earlier
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
+// Iterate through all the command folders
 for (const folder of commandFolders) {
 	const commandsPath = path.join(foldersPath, folder);
 	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
@@ -41,6 +44,7 @@ for (const folder of commandFolders) {
 	}
 }
 
+// Listen for interactions from /commands
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isChatInputCommand()) return;
 	const command = interaction.client.commands.get(interaction.commandName);
@@ -65,6 +69,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
 				flags: MessageFlags.Ephemeral,
 			});
 		}
+	}
+});
+
+client.on(Events.MessageCreate, async (message) => {
+	if (message.author.id == '442135145781264394') {
+		message.react('<:ermactually:1435427461872750612>').catch(console.error);
 	}
 });
 
