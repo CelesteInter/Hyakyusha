@@ -4,7 +4,6 @@ const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
 const { token } = require('./config.json');
 
-
 // Create a new client instance
 const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
@@ -72,10 +71,18 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 });
 
+// Whenever a message is sent
 client.on(Events.MessageCreate, async (message) => {
+
+	// If the author is the number, react with nerd emoji
 	if (message.author.id == '442135145781264394') {
 		message.react('<:ermactually:1435427461872750612>').catch(console.error);
 	}
+
+    if (message.author.id == '378308774747701258' && botspeak_enabled) {
+        message.channel.send(message.content).catch(console.error);
+        message.delete().catch(console.error);
+    }
 });
 
 // Log in to Discord with your client's token
