@@ -78,11 +78,6 @@ client.on(Events.MessageCreate, async (message) => {
 	if (message.author.id == '442135145781264394') {
 		message.react('<:ermactually:1435427461872750612>').catch(console.error);
 	}
-
-    if (message.author.id == '378308774747701258' && botspeak_enabled) {
-        message.channel.send(message.content).catch(console.error);
-        message.delete().catch(console.error);
-    }
 });
 
 // Log in to Discord with your client's token
