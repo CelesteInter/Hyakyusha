@@ -10,7 +10,8 @@ module.exports = {
 			.setRequired(true),
 		),
 	async execute(interaction) {
-		if (interaction.user.id !== '378308774747701258') {
+		const userList = ['378308774747701258', '378789446327468033'];
+		if (!userList.includes(interaction.user.id)) {
 			return interaction.reply({ content: 'You are not authorized to use this command.', ephemeral: true });
 		}
 		const messageContent = interaction.options.getString('content');
