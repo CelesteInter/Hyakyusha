@@ -1,0 +1,1 @@
+reactEnabled = false; // Initial state

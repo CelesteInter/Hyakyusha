@@ -71,11 +71,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	}
 });
 
+// Load reactEnabled state
+const reactEnable = require('./data/reactEnable.js');
+
 // Whenever a message is sent
 client.on(Events.MessageCreate, async (message) => {
 
 	// If the author is the number, react with nerd emoji
-	if (message.author.id == '442135145781264394') {
+	if (message.author.id == '442135145781264394' && reactEnable.reactEnabled) {
 		message.react('<:ermactually:1435427461872750612>').catch(console.error);
 	}
 });
