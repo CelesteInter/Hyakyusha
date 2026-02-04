@@ -21,6 +21,7 @@
 	"guildId": "ID of server for testing commands"
 }
 ```
+5. As of 2/3/2026: You will also need the dependency fuse.js, simply run `npm install fuse.js`
 
 ### Running the bot
 1. To run the bot, use `node index.js` or `node .` if `"main": "index.js"` specified in `package.json`
