@@ -3,8 +3,11 @@ const { SlashCommandBuilder } = require('discord.js');
 const Fuse = require('fuse.js');
 // File search to read skill directory
 const fs = require('fs');
-// Path requirement
-const path = require('path');
+// For future need - path allows for cross-platform compatability with directories.
+// const path = require('path');
+
+// For alternative names/Aliasing
+const skillAliases = require('../../commands/search/skillAliases.json');
 
 // get skills from data/embedSkills
 const skillFiles = fs.readdirSync('./data/embedSkills') // scan files in data/embedSkills folder
@@ -27,6 +30,11 @@ module.exports = {
         // Save input to a string and lowercase it
         let skillInput = interaction.options.getString('skillname');
         skillInput = skillInput.toLowerCase();
+
+        // Determine if the input is an alias and convert if it is
+        if (skillInput in skillAliases) {
+            skillInput = skillAliases[skillInput];
+        }
 
         // Try find a file in embedSkills with the name
         try {
