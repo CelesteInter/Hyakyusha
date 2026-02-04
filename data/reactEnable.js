@@ -1,1 +1,1 @@
-reactEnabled = false; // Initial state
+export const reactEnabled = false; // Initial state

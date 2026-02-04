@@ -1,8 +1,14 @@
 // Require the necessary discord.js classes
-const fs = require('node:fs');
-const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
-const { token } = require('./config.json');
+import fs from 'node:fs';
+import path from 'node:path';
+import { Client, Collection, Events, GatewayIntentBits, MessageFlags } from 'discord.js';
+// ESM doesn't allow for direct json importing, so we need to replace it with a constant that parses the JSON
+const config = JSON.parse(fs.readFileSync('./config.json'));
+const token = config.token;
+
+// Replace __dirname with ESM-compatible workaround
+import { fileURLToPath } from 'node:url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Import Chokidar
 // Note: Chokidar v4+ is purely ESM and has doesn't allow for CommonJS
@@ -38,7 +44,7 @@ for (const folder of commandFolders) {
 	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
-		const command = require(filePath);
+		const command = await import(filePath);
 		// Set a new item in the Collection with the key as the command name and the value as the exported module
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
@@ -94,13 +100,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 // Load reactEnabled state
-const reactEnable = require('./data/reactEnable.js');
+import { reactEnabled } from './data/reactEnable.js';
 
 // Whenever a message is sent
 client.on(Events.MessageCreate, async (message) => {
 
 	// If the author is the number, react with nerd emoji
-	if (message.author.id == '442135145781264394' && reactEnable.reactEnabled) {
+	if (message.author.id == '442135145781264394' && reactEnabled) {
 		message.react('<:ermactually:1435427461872750612>').catch(console.error);
 	}
 });

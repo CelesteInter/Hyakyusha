@@ -1,4 +1,4 @@
-const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
+import { EmbedBuilder, AttachmentBuilder } from 'discord.js';
 
 const file = new AttachmentBuilder('data/embedSkills/images/cure.png', { name: 'cure.png' });
 const icon = new AttachmentBuilder('data/icons/cele.png', { name: 'cele.png' });
@@ -14,7 +14,5 @@ const embed = new EmbedBuilder()
     });
 
 // Export both the embed and the files so the main command can send them together
-module.exports = {
-    embeds: [embed],
-    files: [file, icon],
-};
+export const embeds = [embed];
+export const files = [file, icon];
