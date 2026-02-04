@@ -11,7 +11,6 @@ module.exports = {
 		),
 	async execute(interaction) {
 		const diceType = interaction.options.getString('dicetype');
-		// Add dice rolling logic here
         const diceArray = diceType.split('d');
         if (diceArray.length !== 2) {
             return interaction.reply({ content: 'Invalid dice format. Use XdY format, e.g., 2d6.', ephemeral: true });
