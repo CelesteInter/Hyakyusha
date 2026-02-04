@@ -5,9 +5,7 @@ const icon = new AttachmentBuilder('data/icons/cele.png', { name: 'cele.png' });
 const embed = new EmbedBuilder()
         .setTitle("White Mage")
     .setDescription("White magic, the arcane art of succor, was conceived eras past that the world might know comfort."
-                    + " Alas, man began perverting its powers for self-gain, and by his wickedness brought about the Sixth Umbral catastrophe."
-                    + " Although the art subsequently became forbidden, it is now in the midst of a revival at the hands of the Padjal,"
-                    + " chosen of the elementals.\n \nThose who would walk the path of the white mage are healers without peer,"
+                    + " \nThose who would walk the path of the white mage are healers without peer,"
                     + " possessed of the power to deliver comrades from the direst of afflictions—even the icy grip of death itself.")
     .addFields(
         {
@@ -19,7 +17,7 @@ const embed = new EmbedBuilder()
     // TODO: setup this image later with an actual image
     // .setImage("attachment://")
     .setThumbnail("attachment://stone.png")
-    .setColor("#26c555")
+    .setColor("#4dff5b")
     .setFooter({
     text: "FFXIV homebrew By Katalyste",
     iconURL: "attachment://cele.png",

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/CelesteInter/Hyakyusha#readme",
   "dependencies": {
+    "chokidar": "^5.0.0",
     "discord.js": "^14.25.1",
     "fuse.js": "^7.1.0"
   },

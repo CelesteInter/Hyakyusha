@@ -4,7 +4,7 @@ const file = new AttachmentBuilder('data/embedSkills/images/cure.png', { name: '
 const icon = new AttachmentBuilder('data/icons/cele.png', { name: 'cele.png' });
 
 const embed = new EmbedBuilder()
-    .setColor("#26c555")
+    .setColor("#4dff5b")
     .setTitle('Cure I')
     .setDescription('Heal a single target for 1d4 HP.')
     .setThumbnail('attachment://cure.png')

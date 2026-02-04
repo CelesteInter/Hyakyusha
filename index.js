@@ -4,6 +4,12 @@ const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
 const { token } = require('./config.json');
 
+// Import Chokidar
+// Note: Chokidar v4+ is purely ESM and has doesn't allow for CommonJS
+
+// embed hot reload watcher (must be persistant while running to ensure hot reloads)
+const embedWatcher = chokidar.watch('./embeds', { persistant: true });
+
 // Create a new client instance
 const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
@@ -42,6 +48,19 @@ for (const folder of commandFolders) {
 		}
 	}
 }
+
+// embed hot-reload
+// Explanation of code: chokidar uses .on('event', (return from chokider) => { do something with code })
+// assign absolutePath to the path of the file -> node.js only works on absolute paths (C://thing/thang.js)
+embedWatcher.on('change', (filePath) => {
+	const absolutePath = path.resolve(filePath);
+	// make sure the node.js require cache already contains the file
+	if (require.cache(absolutePath)) {
+		// Delete the cached file, forcing a hot reload
+		delete require.cache[absolutePath];
+		console.log(`Hot-reload: ${path.basename(filePath)}`);
+	}
+});
 
 // Listen for interactions from /commands
 client.on(Events.InteractionCreate, async (interaction) => {
