@@ -5,14 +5,19 @@ import Fuse from 'fuse.js';
 import { readdirSync } from 'fs';
 // JSON parsing for aliases
 import { readFileSync } from 'fs';
+import { readFile } from 'fs/promises';
 
 // For alternative names/Aliasing
-const skillAliases = JSON.parse(readFileSync('./commands/search/skillAliases.json'));
+let skillAliases = JSON.parse(await readFile('./commands/search/skillAliases.json'));
+export async function updateSkillAlias() {
+    skillAliases = JSON.parse(await readFile('./commands/search/skillAliases.json'));
+}
+
 
 // get skills from data/embedSkills
 const skillFiles = readdirSync('./data/embedSkills') // scan files in data/embedSkills folder
-    .filter(file => file.endsWith('.js')) // filter to just js files
-    .map(file => file.replace('.js', '')); // replace js with nothing to get names
+    .filter(file => file.endsWith('.json')) // filter to just js files
+    .map(file => file.replace('.json', '')); // replace js with nothing to get names
 
 const fuse = new Fuse(skillFiles, { threshold: 0.4 }); // Larger threshold = less leniency
 
@@ -36,12 +41,17 @@ export async function execute(interaction) {
 
     // Try find a file in embedSkills with the name
     try {
-        const tempPath = `../../data/embedSkills/${skillInput}.js`;
-        const skillData = await import(tempPath);
+        const tempPath = `./data/embedSkills/${skillInput}.json`;
+        const skillData = await JSON.parse(readFileSync(tempPath));
 
         return interaction.reply({ embeds: skillData.embeds, files: skillData.files });
     }
-    catch { // error handling.
+    catch (error) { // error handling.
+        // debug
+        if (error.code != 'ENOENT') {
+            console.log(error);
+        }
+
         const result = fuse.search(skillInput);
 
         // if result length is > 0, return best match

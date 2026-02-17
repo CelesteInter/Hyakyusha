@@ -1,1 +1,0 @@
-export const reactEnabled = false; // Initial state

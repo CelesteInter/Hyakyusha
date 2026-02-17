@@ -1,0 +1,26 @@
+{
+    "embeds":[
+        {
+            "color":5111643,
+            "title":"Stone",
+            "description":"Deal 1d4 damage to an enemy",
+            "thumbnail":{
+                "url":"attachment://cure.png"
+            },
+            "footer":{
+                "text":"FFXIV Homebrew by Katalyste",
+                "icon_url":"attachment://cele.png"
+            }
+        }
+    ],
+    "files":[
+        {
+            "attachment":"data/embedSkills/images/cure.png",
+            "name":"cure.png"
+        },
+        {
+            "attachment":"data/icons/cele.png",
+            "name":"cele.png"
+        }
+    ]
+}

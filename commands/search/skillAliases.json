@@ -1,4 +1,7 @@
 {
     "cure 1": "cure",
-    "cure i": "cure"
+    "cure i": "cure",
+    "stone 1": "stone",
+    "stone i": "stone",
+    "rock": "stone"
 }

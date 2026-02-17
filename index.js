@@ -12,9 +12,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Import Chokidar
 // Note: Chokidar v4+ is purely ESM and has doesn't allow for CommonJS
+import chokidar from 'chokidar';
 
 // embed hot reload watcher (must be persistant while running to ensure hot reloads)
-// const embedWatcher = chokidar.watch('./embeds', { persistant: true });
+const aliasWatcher = chokidar.watch(['./commands/search/skillAliases.json'], { persistant: true });
 
 // Create a new client instance
 const client = new Client({ intents: [
@@ -55,21 +56,15 @@ for (const folder of commandFolders) {
 	}
 }
 
-// embed hot-reload
+// Alias hot-reload
 // Explanation of code: chokidar uses .on('event', (return from chokider) => { do something with code })
-// assign absolutePath to the path of the file -> node.js only works on absolute paths (C://thing/thang.js)
-
-/*
-embedWatcher.on('change', (filePath) => {
-	const absolutePath = path.resolve(filePath);
-	// make sure the node.js require cache already contains the file
-	if (require.cache(absolutePath)) {
-		// Delete the cached file, forcing a hot reload
-		delete require.cache[absolutePath];
-		console.log(`Hot-reload: ${path.basename(filePath)}`);
-	}
+import { updateSkillAlias } from './commands/search/skill.js';
+aliasWatcher.on('change', (loc) => {
+	// Log location of detected change
+	console.log('change detected: ' + loc);
+	// update skill alias
+	updateSkillAlias();
 });
-*/
 
 // Listen for interactions from /commands
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -100,13 +95,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 // Load reactEnabled state
-import { reactEnabled } from './data/reactEnable.js';
+import { reactEnable } from './commands/chat/toggleReaction.js';
 
 // Whenever a message is sent
 client.on(Events.MessageCreate, async (message) => {
 
 	// If the author is the number, react with nerd emoji
-	if (message.author.id == '442135145781264394' && reactEnabled) {
+	// Dante's UID 442135145781264394
+	if (message.author.id == '442135145781264394' && reactEnable) {
 		message.react('<:ermactually:1435427461872750612>').catch(console.error);
 	}
 });
