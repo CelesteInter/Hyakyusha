@@ -5,10 +5,19 @@ import Fuse from 'fuse.js';
 import { readdirSync } from 'fs';
 // JSON parsing for aliases
 import { readFileSync } from 'fs';
+import { readFile } from 'fs/promises';
 
 // For alternative names/Aliasing
-const jobAliases = JSON.parse(readFileSync('./commands/search/jobAliases.json'));
+let jobAliases = JSON.parse(readFileSync('./commands/search/jobAliases.json'));
 // import jobAliases from '../../commands/search/jobAliases.json' assert { type: 'json' };
+export async function updateJobAlias() {
+    try {
+    jobAliases = JSON.parse(await readFile('./commands/search/jobAliases.json'));
+    }
+    catch {
+    console.log("JSON invalid!");
+    }
+}
 
 // get skills from data/embedSkills
 const jobFiles = readdirSync('./data/embedJobs') // scan files in data/embedJobs folder

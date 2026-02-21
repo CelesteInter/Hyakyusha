@@ -15,7 +15,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import chokidar from 'chokidar';
 
 // embed hot reload watcher (must be persistant while running to ensure hot reloads)
-const aliasWatcher = chokidar.watch(['./commands/search/skillAliases.json'], { persistant: true });
+const aliasWatcher = chokidar.watch(['./commands/search/skillAliases.json', './commands/search/jobAliases.json'], { persistant: true });
 
 // Create a new client instance
 const client = new Client({ intents: [
@@ -59,11 +59,20 @@ for (const folder of commandFolders) {
 // Alias hot-reload
 // Explanation of code: chokidar uses .on('event', (return from chokider) => { do something with code })
 import { updateSkillAlias } from './commands/search/skill.js';
+import { updateJobAlias } from './commands/search/job.js';
 aliasWatcher.on('change', (loc) => {
 	// Log location of detected change
 	console.log('change detected: ' + loc);
-	// update skill alias
-	updateSkillAlias();
+	switch (loc) {
+		case ('commands/search/skillAliases.json'): // update skill alias
+			updateSkillAlias();
+			break;
+		case ('commands/search/jobAliases.json'): // update job alias
+			updateJobAlias();
+			break;
+		default:
+			console.log('Change occurred in unregistered file.'); // error checking
+	}
 });
 
 // Listen for interactions from /commands

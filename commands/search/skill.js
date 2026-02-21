@@ -10,7 +10,12 @@ import { readFile } from 'fs/promises';
 // For alternative names/Aliasing
 let skillAliases = JSON.parse(await readFile('./commands/search/skillAliases.json'));
 export async function updateSkillAlias() {
+    try {
     skillAliases = JSON.parse(await readFile('./commands/search/skillAliases.json'));
+    }
+    catch {
+    console.log("JSON invalid!");
+    }
 }
 
 

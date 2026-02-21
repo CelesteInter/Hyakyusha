@@ -1,0 +1,26 @@
+{
+    "embeds":[
+        {
+            "color":5111643,
+            "title":"White Mage",
+            "description":"White magic, the arcane art of succor, was conceived eras past that the world might know comfort. \nThose who would walk the path of the white mage are healers without peer, possessed of the power to deliver comrades from the direst of afflictions—even the icy grip of death itself.",
+            "thumbnail":{
+                "url":"attachment://whmstone.png"
+            },
+            "footer":{
+                "text":"FFXIV Homebrew by Katalyste",
+                "icon_url":"attachment://cele.png"
+            }
+        }
+    ],
+    "files":[
+        {
+            "attachment":"data/embedJobs/images/whmstone.png",
+            "name":"whmstone.png"
+        },
+        {
+            "attachment":"data/icons/cele.png",
+            "name":"cele.png"
+        }
+    ]
+}
