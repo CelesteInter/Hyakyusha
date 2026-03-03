@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags, SlashCommandBuilder } from 'discord.js';
 // For "did you mean" feature
 import Fuse from 'fuse.js';
 // File search to read skill directory
@@ -22,7 +22,7 @@ export async function updateSkillAlias() {
 // get skills from data/embedSkills
 const skillFiles = readdirSync('./data/embedSkills') // scan files in data/embedSkills folder
     .filter(file => file.endsWith('.json')) // filter to just js files
-    .map(file => file.replace('.json', '')); // replace js with nothing to get names
+    .map(file => file.replace('.json', '')); // replace json with nothing to get names
 
 const fuse = new Fuse(skillFiles, { threshold: 0.4 }); // Larger threshold = less leniency
 
@@ -65,9 +65,46 @@ export async function execute(interaction) {
 
         let response = 'Invalid skill name.';
         if (suggestion != null) {
+            // Add suggestion to response
             response += `\n\n Did you mean \`\`${suggestion}\`\`?`;
-        }
 
-        return interaction.reply({ content: response, ephemeral: true });
+            // Create button for suggestion selection
+            const selectRecSkill = new ButtonBuilder().setCustomId('selectRecSkill').setLabel('select').setStyle(ButtonStyle.Success);
+
+            const row = new ActionRowBuilder().addComponents(selectRecSkill);
+
+            // Reply to the message and await reaction
+            const messageResponse = await interaction.reply({
+                content: response,
+                components: [row],
+                flags: MessageFlags.Ephemeral,
+                withResponse: true,
+            });
+
+            // create a filter so only author can interact with button
+            const collectorFilter = (i) => i.user.id === interaction.user.id;
+            // await reaction from message button, otherwise tell user interaction has expired
+            try {
+                // await confirmation
+                const confirmation = await messageResponse.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+                if (confirmation.customId === 'selectRecSkill') {
+                    const tempPath = `./data/embedSkills/${suggestion}.json`;
+                    const skillData = await JSON.parse(readFileSync(tempPath));
+                    await confirmation.update({
+                        content: '',
+                        embeds: skillData.embeds,
+                        files: skillData.files,
+                        components: [],
+                    });
+                }
+
+            }
+            catch {
+                await interaction.editReply({ content: 'Interaction expired, please try again', components: [] });
+            }
+        }
+        else {
+            return interaction.reply({ content: response, flags: MessageFlags.Ephemeral });
+        }
     }
 }
