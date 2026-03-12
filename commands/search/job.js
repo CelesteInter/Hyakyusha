@@ -46,7 +46,7 @@ export async function execute(interaction) {
 
     // Try find a file in embedJobs with the name
     try {
-        const tempPath = `../../data/embedJobs/${jobInput}.json`;
+        const tempPath = `./data/embedJobs/${jobInput}.json`;
         const jobData = await JSON.parse(readFileSync(tempPath));
 
         return interaction.reply({ embeds: jobData.embeds, files: jobData.files });
