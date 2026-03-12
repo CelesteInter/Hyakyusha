@@ -5,7 +5,7 @@ export const data = new SlashCommandBuilder()
 	.setDescription('Make the bot speak a message')
 	.addStringOption(option => option.setName('content')
 		.setDescription('The message for the bot to say')
-		.setRequired(true)
+		.setRequired(true),
 	);
 export async function execute(interaction) {
 	const userList = ['378308774747701258', '378789446327468033'];

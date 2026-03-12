@@ -69,9 +69,11 @@ export async function execute(interaction) {
             response += `\n\n Did you mean \`\`${suggestion}\`\`?`;
 
             // Create button for suggestion selection
-            const selectRecSkill = new ButtonBuilder().setCustomId('selectRecSkill').setLabel('select').setStyle(ButtonStyle.Success);
+            const selectRecSkill = new ButtonBuilder().setCustomId('selectRecSkill').setLabel('Select').setStyle(ButtonStyle.Success);
+            // Create button for suggestion selection and publish
+            const selectShareSkill = new ButtonBuilder().setCustomId('selectShareSkill').setLabel('Select & Share').setStyle(ButtonStyle.Primary);
 
-            const row = new ActionRowBuilder().addComponents(selectRecSkill);
+            const row = new ActionRowBuilder().addComponents(selectRecSkill, selectShareSkill);
 
             // Reply to the message and await reaction
             const messageResponse = await interaction.reply({
@@ -87,13 +89,57 @@ export async function execute(interaction) {
             try {
                 // await confirmation
                 const confirmation = await messageResponse.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+
+                // Filter response based on selected button
                 if (confirmation.customId === 'selectRecSkill') {
                     const tempPath = `./data/embedSkills/${suggestion}.json`;
                     const skillData = await JSON.parse(readFileSync(tempPath));
-                    await confirmation.update({
+
+                    // Create button for suggestion selection and publish
+                    const shareSkill = new ButtonBuilder().setCustomId('shareSkill').setLabel('Share').setStyle(ButtonStyle.Primary);
+
+                    // Create additional row for new response
+                    const followRow = new ActionRowBuilder().addComponents(shareSkill);
+
+                    const secondResponse = await confirmation.update({
                         content: '',
                         embeds: skillData.embeds,
                         files: skillData.files,
+                        components: [followRow],
+                        withResponse: true,
+                    });
+                    try {
+                        const followConfirmation = await secondResponse.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+                        if (followConfirmation.customId === 'shareSkill') {
+                            await interaction.channel.send({
+                            content: `Shared by ${interaction.user}`,
+                            embeds: skillData.embeds,
+                            files: skillData.files,
+                            components: [],
+                        });
+                        await followConfirmation.update({
+                            content: 'Sent!',
+                            embeds: [],
+                            files: [],
+                            components: [],
+                        });
+                        }
+                    }
+                    catch {
+                        await interaction.editReply({ components: [] });
+                    }
+                }
+                else if (confirmation.customId === 'selectShareSkill') {
+                    const tempPath = `./data/embedSkills/${suggestion}.json`;
+                    const skillData = await JSON.parse(readFileSync(tempPath));
+                    await interaction.channel.send({
+                        content: `Shared by ${interaction.user}`,
+                        embeds: skillData.embeds,
+                        files: skillData.files,
+                        components: [],
+                    });
+                    await confirmation.update({
+                        content: 'Sent!',
                         components: [],
                     });
                 }
