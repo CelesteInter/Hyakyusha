@@ -23,7 +23,7 @@ export async function execute(interaction) {
 
     // Create an initial list of first 15 skills
     let response = '';
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 15; i++) { // Iterate through first 15 abilities
         if (i < skillFiles.length) {
             response += skillFiles[i].name[0].toUpperCase() + skillFiles[i].name.slice(1) + '\n';
         }
@@ -31,6 +31,8 @@ export async function execute(interaction) {
             break;
         }
     }
+
+    // Calculate # of pages
     const pages = Math.ceil(skillFiles.length / 15);
 
     // Add list of skills to embed
@@ -46,7 +48,9 @@ export async function execute(interaction) {
         let active = true;
         let confirmation;
 
+        // Continue to loop while active
         while (active == true) {
+            // End loop on fail
             try {
                 // Create buttons
                 const NextButton = new ButtonBuilder().setCustomId('next').setLabel('Next Page  ➡️').setStyle(ButtonStyle.Primary);
@@ -57,7 +61,7 @@ export async function execute(interaction) {
 
                 // Reply to the message and await reaction
                 let listResponse;
-                try {
+                try { // Attempt to update existing reply
                     listResponse = await confirmation.update({
                         embeds: [skillList],
                         components: [row],
@@ -65,7 +69,7 @@ export async function execute(interaction) {
                         withResponse: true,
                     });
                 }
-                catch {
+                catch { // If existing reply doesn't exist, create reply
                     listResponse = await interaction.reply({
                         embeds: [skillList],
                         components: [row],
@@ -89,7 +93,7 @@ export async function execute(interaction) {
                     }
                     // Recreate skillList embed
                     response = '';
-                    for (let i = 0; i < 15; i++) {
+                    for (let i = 0; i < 15; i++) { // Iterate through 15 skills from page position in array
                         const index = i + ((page - 1) * 15);
                         if (index < skillFiles.length) {
                             response += skillFiles[index].name[0].toUpperCase() + skillFiles[index].name.slice(1) + '\n';
@@ -104,7 +108,7 @@ export async function execute(interaction) {
                         .setDescription(response)
                         .setFooter({ text: `Page ${page}/${pages}` });
                 }
-                else if (confirmation.customId === 'next') {
+                else if (confirmation.customId === 'next') { // Next page handling
                     // increase page count
                     page++;
                     if (page > pages) { // loop to start
@@ -128,11 +132,10 @@ export async function execute(interaction) {
                         .setFooter({ text: `Page ${page}/${pages}` });
                 }
             }
-            catch (error) {
+            catch { // Break loop, clear skill list, remove reply
                 active = false;
                 skillList = [];
-                console.log(error);
-                interaction.editReply({ content: 'Interaction expired, please try again', components: [] });
+                interaction.editReply({ content: 'Interaction expired.', components: [] });
             }
         }
     }
