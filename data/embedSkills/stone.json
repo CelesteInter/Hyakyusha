@@ -5,7 +5,7 @@
             "title":"Stone",
             "description":"Deal 1d4 damage to an enemy",
             "thumbnail":{
-                "url":"attachment://cure.png"
+                "url":"attachment://stone.png"
             },
             "footer":{
                 "text":"FFXIV Homebrew by Katalyste",
@@ -15,12 +15,13 @@
     ],
     "files":[
         {
-            "attachment":"data/embedSkills/images/cure.png",
-            "name":"cure.png"
+            "attachment":"data/embedSkills/images/stone.png",
+            "name":"stone.png"
         },
         {
             "attachment":"data/icons/cele.png",
             "name":"cele.png"
         }
-    ]
+    ],
+    "tag": "White Mage"
 }

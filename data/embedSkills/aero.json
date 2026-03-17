@@ -1,0 +1,27 @@
+{
+    "embeds":[
+        {
+            "color":5111643,
+            "title":"Aero",
+            "description":"Deal 1d4 damage to an enemy",
+            "thumbnail":{
+                "url":"attachment://aero.png"
+            },
+            "footer":{
+                "text":"FFXIV Homebrew by Katalyste",
+                "icon_url":"attachment://cele.png"
+            }
+        }
+    ],
+    "files":[
+        {
+            "attachment":"data/embedSkills/images/aero.png",
+            "name":"aero.png"
+        },
+        {
+            "attachment":"data/icons/cele.png",
+            "name":"cele.png"
+        }
+    ],
+    "tag": "White Mage"
+}
