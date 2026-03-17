@@ -15,7 +15,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import chokidar from 'chokidar';
 
 // embed hot reload watcher (must be persistant while running to ensure hot reloads)
-const aliasWatcher = chokidar.watch(['./commands/search/skillAliases.json', './commands/search/jobAliases.json'], { persistant: true });
+const watcher = chokidar.watch([
+	'./commands/search/skillAliases.json',
+	'./commands/search/jobAliases.json',
+	'./data/embedSkills',
+], { persistant: true });
 
 // Create a new client instance
 const client = new Client({ intents: [
@@ -59,8 +63,9 @@ for (const folder of commandFolders) {
 // Alias hot-reload
 // Explanation of code: chokidar uses .on('event', (return from chokider) => { do something with code })
 import { updateSkillAlias } from './commands/search/skill.js';
-import { updateJobAlias } from './commands/search/job.js';
-aliasWatcher.on('change', (loc) => {
+import { updateJobAlias, updateJobFiles } from './commands/search/job.js';
+import { updateSkillFiles } from './commands/search/skill.js';
+watcher.on('change', (loc) => {
 	// Log location of detected change
 	console.log('change detected: ' + loc);
 	switch (loc) {
@@ -74,6 +79,34 @@ aliasWatcher.on('change', (loc) => {
 			console.log('Change occurred in unregistered file.'); // error checking
 	}
 });
+
+// Adding files to directory
+watcher.on('add', (loc) => {
+	// Log location of detected change
+	console.log('change detected: ' + loc);
+	if (loc.includes('data/embedSkills/')) {
+		updateSkillFiles();
+		console.log('Updated Skill Files!');
+	}
+	if (loc.includes('data/embedJobs/')) {
+		updateJobFiles();
+		console.log('Updated Job Files!');
+	}
+});
+
+// Removing files from directory
+watcher.on('unlink', (loc) => {
+	console.log('change detected: ' + loc);
+	if (loc.includes('data/embedSkills/')) {
+		updateSkillFiles();
+		console.log('Updated Skill Files!');
+	}
+	if (loc.includes('data/embedJobs/')) {
+		updateJobFiles();
+		console.log('Updated Job Files!');
+	}
+});
+
 
 // Listen for interactions from /commands
 client.on(Events.InteractionCreate, async (interaction) => {

@@ -20,11 +20,19 @@ export async function updateJobAlias() {
 }
 
 // get skills from data/embedJobs
-const jobFiles = readdirSync('./data/embedJobs') // scan files in data/embedJobs folder
+let jobFiles = readdirSync('./data/embedJobs') // scan files in data/embedJobs folder
     .filter(file => file.endsWith('.json')) // filter to just js files
     .map(file => file.replace('.json', '')); // replace js with nothing to get names
 
-const fuse = new Fuse(jobFiles, { threshold: 0.4 }); // Larger threshold = less leniency
+let fuse = new Fuse(jobFiles, { threshold: 0.4 }); // Larger threshold = less leniency
+
+// Hot-reload
+export async function updateJobFiles() {
+    jobFiles = readdirSync('./data/embedJobs') // scan files in data/embedJobs folder
+    .filter(file => file.endsWith('.json')) // filter to just js files
+    .map(file => file.replace('.json', '')); // replace js with nothing to get names
+    fuse = new Fuse(jobFiles, { threshold: 0.4 }); // Larger threshold = less leniency
+}
 
 export const data = new SlashCommandBuilder()
     .setName('job')

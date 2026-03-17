@@ -20,11 +20,17 @@ export async function updateSkillAlias() {
 
 
 // get skills from data/embedSkills
-const skillFiles = readdirSync('./data/embedSkills') // scan files in data/embedSkills folder
+let skillFiles = readdirSync('./data/embedSkills') // scan files in data/embedSkills folder
     .filter(file => file.endsWith('.json')) // filter to just js files
     .map(file => file.replace('.json', '')); // replace json with nothing to get names
-
-const fuse = new Fuse(skillFiles, { threshold: 0.4 }); // Larger threshold = less leniency
+let fuse = new Fuse(skillFiles, { threshold: 0.4 }); // Larger threshold = less leniency
+// Hot-reload
+export async function updateSkillFiles() {
+    skillFiles = readdirSync('./data/embedSkills') // scan files in data/embedSkills folder
+        .filter(file => file.endsWith('.json')) // filter to just js files
+        .map(file => file.replace('.json', '')); // replace json with nothing to get names
+    fuse = new Fuse(skillFiles, { threshold: 0.4 }); // Larger threshold = less leniency
+}
 
 export const data = new SlashCommandBuilder()
     .setName('skill')

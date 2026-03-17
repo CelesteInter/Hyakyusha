@@ -10,6 +10,8 @@ const skillFiles = readdirSync('./data/embedSkills') // scan files in data/embed
         return { name: file.replace('.json', ''), tag: data.tag };
     }); // replace json with nothing to get names
 
+// sort skills
+
     // Create test objects - for testing larger amounts of skills
     // const dummies = 100;
     // for (let t = 0; t < dummies; t++) {
@@ -18,9 +20,23 @@ const skillFiles = readdirSync('./data/embedSkills') // scan files in data/embed
 
 export const data = new SlashCommandBuilder()
     .setName('skills')
-    .setDescription('List skills');
+    .setDescription('List skills')
+    .addBooleanOption((option) =>
+		option.setName('sort').setDescription('list skills by tag'),
+    );
 export async function execute(interaction) {
+    // Handle command execution
+    // Unsorted function
+    if (interaction.options.getBoolean('sort') != true) {
+        return unsortedLibrary(interaction);
+    }
+    // Sorted function
+    else {
+        return sortedLibrary(interaction);
+    }
+}
 
+async function unsortedLibrary(interaction) {
     // Create an initial list of first 15 skills
     let response = '';
     for (let i = 0; i < 15; i++) { // Iterate through first 15 abilities
@@ -145,3 +161,6 @@ export async function execute(interaction) {
     }
 }
 
+async function sortedLibrary(interaction) {
+    return;
+}
