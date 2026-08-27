@@ -24,6 +24,7 @@
 
 ### Additional dependencies
 2/3/2026: Uses fuse.js
+
 2/4/2026: Now using chokidar to allow for hot reloading of search commands
 
 Dependencies should be installed via packagelock from npm
