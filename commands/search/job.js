@@ -20,13 +20,11 @@ export async function updateJobAlias() {
 }
 
 // get skills from data/embedJobs
-let jobFiles = readdirSync('./data/embedJobs') // scan files in data/embedJobs folder
-    .filter(file => file.endsWith('.json')) // filter to just js files
-    .map(file => file.replace('.json', '')); // replace js with nothing to get names
+let jobFiles;
+let fuse;
+updateJobFiles();
 
-let fuse = new Fuse(jobFiles, { threshold: 0.4 }); // Larger threshold = less leniency
-
-// Hot-reload
+// Update job command files table
 export async function updateJobFiles() {
     jobFiles = readdirSync('./data/embedJobs') // scan files in data/embedJobs folder
     .filter(file => file.endsWith('.json')) // filter to just js files

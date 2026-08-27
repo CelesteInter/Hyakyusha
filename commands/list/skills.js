@@ -3,20 +3,41 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, MessageFlag
 import { readdirSync, readFileSync } from 'fs';
 
 // get skills from data/embedSkills
-const skillFiles = readdirSync('./data/embedSkills') // scan files in data/embedSkills folder
+let skillFiles;
+let sortedSkills;
+updateSkillsFiles();
+
+export async function updateSkillsFiles() {
+    // Reassign skillFiles to files in folder
+    skillFiles = readdirSync('./data/embedSkills') // scan files in data/embedSkills folder
     .filter(file => file.endsWith('.json')) // filter to just js files
     .map(file => {
         const data = JSON.parse(readFileSync(`./data/embedSkills/${file}`, 'utf-8'));
         return { name: file.replace('.json', ''), tag: data.tag };
-    }); // replace json with nothing to get names
-
-// sort skills
+    });
 
     // Create test objects - for testing larger amounts of skills
-    // const dummies = 100;
+    // const dummies = 18;
     // for (let t = 0; t < dummies; t++) {
     //     skillFiles.push({ name: `dummy${t}`, tag: 'dummy' });
     // }
+
+    // const pageDummies = 14;
+    // for (let t = 0; t < pageDummies; t++) {
+    //     skillFiles.push({ name: `2paged${t}`, tag: 'dummy2'});
+    // }
+
+    // ==== Sort skills ====
+    // reset map
+    sortedSkills = new Map();
+    for (const obj of skillFiles) {
+        if (!sortedSkills.has(obj.tag)) {
+            sortedSkills.set(obj.tag, new Array());
+        }
+        sortedSkills.get(obj.tag).push(obj.name);
+    }
+}
+
 
 export const data = new SlashCommandBuilder()
     .setName('skills')
@@ -162,5 +183,47 @@ async function unsortedLibrary(interaction) {
 }
 
 async function sortedLibrary(interaction) {
-    return;
+    const sortedEmbed = new EmbedBuilder().setTitle("List of Skills");
+    for (const tag of sortedSkills.keys()) {
+        // Handle 3
+        if (sortedSkills.get(tag).length > 14 && sortedSkills.get(tag).length < 22) {
+            const set1 = { name: '༺───────', value: '', inline: true };
+            const set2 = { name: tag, value: '', inline: true };
+            const set3 = { name: '───────༻', value: '', inline: true };
+            let i = 0;
+            for (i = 0; i < 7; i++) {
+                set1.value += `${sortedSkills.get(tag)[i]}\n`;
+            }
+            for (i = 7; i < 14; i++) {
+                set2.value += `${sortedSkills.get(tag)[i]}\n`;
+            }
+            for (i = 14; i < sortedSkills.get(tag).length; i++) {
+                set3.value += `${sortedSkills.get(tag)[i]}\n`;
+            }
+            sortedEmbed.addFields(set1, set2, set3);
+        }
+        // Handle double
+        if (sortedSkills.get(tag).length <= 14 && sortedSkills.get(tag).length >= 8) {
+            const set1 = { name: tag, value: '', inline: true };
+            const set2 = { name: '───────༻', value: '', inline: true };
+            let i = 0;
+            for (i = 0; i < 7; i++) {
+                set1.value += `${sortedSkills.get(tag)[i]}\n`;
+            }
+            for (i = 7; i < sortedSkills.get(tag).length; i++) {
+                set2.value += `${sortedSkills.get(tag)[i]}\n`;
+            }
+            sortedEmbed.addFields(set1, set2);
+        }
+        // Handle single
+        if (sortedSkills.get(tag).length < 8) {
+            const set = { name: tag, value: '', inline: true };
+            for (let i = 0; i < sortedSkills.get(tag).length; i++) {
+                set.value += `${sortedSkills.get(tag)[i]}\n`;
+            }
+            sortedEmbed.addFields(set);
+        }
+    }
+
+    return interaction.reply({ embeds: [sortedEmbed] });
 }

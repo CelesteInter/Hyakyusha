@@ -20,11 +20,11 @@ export async function updateSkillAlias() {
 
 
 // get skills from data/embedSkills
-let skillFiles = readdirSync('./data/embedSkills') // scan files in data/embedSkills folder
-    .filter(file => file.endsWith('.json')) // filter to just js files
-    .map(file => file.replace('.json', '')); // replace json with nothing to get names
-let fuse = new Fuse(skillFiles, { threshold: 0.4 }); // Larger threshold = less leniency
-// Hot-reload
+let skillFiles;
+let fuse;
+updateSkillFiles();
+
+// Update skill command files table
 export async function updateSkillFiles() {
     skillFiles = readdirSync('./data/embedSkills') // scan files in data/embedSkills folder
         .filter(file => file.endsWith('.json')) // filter to just js files
